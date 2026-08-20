@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ExpenseTracker</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            💰 Expense<span>Tracker</span>
+        </div>
+
+        <nav>
+
+            <button class="nav-button active" onclick="showPage('dashboard')">
+                Dashboard
+            </button>
+
+            <button class="nav-button" onclick="showPage('expenses')">
+                All Expenses
+            </button>
+
+            <button class="nav-button" onclick="showPage('summary')">
+                Summary
+            </button>
+
+            <button class="nav-button" onclick="showPage('category')">
+                By Category
+            </button>
+
+            <button class="nav-button" onclick="showPage('month')">
+                By Month
+            </button>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+
+        <header class="top-bar">
+
+            <h1>Expense Tracker</h1>
+
+            <button class="add-button" onclick="showAddExpense()">
+                + Add Expense
+            </button>
+
+        </header>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboardPage" class="page">
+
+            <section class="welcome">
+
+                <h2>Welcome back!</h2>
+
+                <p>
+                    Here's your expense overview.
+                </p>
+
+            </section>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <section class="summary-cards">
+
+                <div class="card">
+
+                    <p>Total Expenses</p>
+
+                    <h2 id="totalExpenses">
+                        ₹0
+                    </h2>
+
+                    <span>All time</span>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p>This Month</p>
+
+                    <h2 id="monthlyExpenses">
+                        ₹0
+                    </h2>
+
+                    <span id="currentMonth">
+                        This month
+                    </span>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p>Total Transactions</p>
+
+                    <h2 id="transactionCount">
+                        0
+                    </h2>
+
+                    <span>All time</span>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p>Categories</p>
+
+                    <h2 id="categoryCount">
+                        0
+                    </h2>
+
+                    <span>Unique</span>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECENT EXPENSES -->
+
+            <section class="expenses-section">
+
+                <div class="section-header">
+
+                    <h2>
+                        Recent Expenses
+                    </h2>
+
+                    <button class="view-button"
+                            onclick="showPage('expenses')">
+
+                        View All
+
+                    </button>
+
+                </div>
+
+
+                <div class="expense-table">
+
+                    <div class="table-header">
+
+                        <span>Date</span>
+                        <span>Description</span>
+                        <span>Category</span>
+                        <span>Amount</span>
+
+                    </div>
+
+
+                    <div id="recentExpenseList">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= ALL EXPENSES ================= -->
+
+        <section id="expensesPage" class="page hidden">
+
+            <div class="page-title">
+
+                <h2>All Expenses</h2>
+
+                <p>
+                    Manage all your expenses.
+                </p>
+
+            </div>
+
+
+            <section class="expenses-section">
+
+                <div class="expense-table">
+
+                    <div class="table-header">
+
+                        <span>Date</span>
+                        <span>Description</span>
+                        <span>Category</span>
+                        <span>Amount</span>
+
+                    </div>
+
+
+                    <div id="allExpenseList">
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <section id="summaryPage" class="page hidden">
+
+            <div class="page-title">
+
+                <h2>Expense Summary</h2>
+
+                <p>
+                    A simple overview of your spending.
+                </p>
+
+            </div>
+
+
+            <section class="summary-cards">
+
+                <div class="card">
+
+                    <p>Total Spent</p>
+
+                    <h2 id="summaryTotal">
+                        ₹0
+                    </h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p>Transactions</p>
+
+                    <h2 id="summaryTransactions">
+                        0
+                    </h2>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p>Average Expense</p>
+
+                    <h2 id="averageExpense">
+                        ₹0
+                    </h2>
+
+                </div>
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= CATEGORY ================= -->
+
+        <section id="categoryPage" class="page hidden">
+
+            <div class="page-title">
+
+                <h2>By Category</h2>
+
+                <p>
+                    See how much you're spending in each category.
+                </p>
+
+            </div>
+
+
+            <section id="categoryList"
+                     class="category-list">
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= MONTH ================= -->
+
+        <section id="monthPage" class="page hidden">
+
+            <div class="page-title">
+
+                <h2>By Month</h2>
+
+                <p>
+                    See your expenses grouped by month.
+                </p>
+
+            </div>
+
+
+            <section id="monthList"
+                     class="category-list">
+
+            </section>
+
+        </section>
+
+
+        <!-- ================= ADD EXPENSE ================= -->
+
+        <section id="addExpenseSection"
+                 class="add-expense-section">
+
+            <h2>Add Expense</h2>
+
+
+            <div class="form">
+
+                <input
+                    type="date"
+                    id="date"
+                >
+
+
+                <input
+                    type="text"
+                    id="description"
+                    placeholder="Description"
+                >
+
+
+                <input
+                    type="number"
+                    id="amount"
+                    placeholder="Amount"
+                >
+
+
+                <input
+                    type="text"
+                    id="category"
+                    placeholder="Category"
+                >
+
+
+                <button onclick="addExpense()">
+                    Add Expense
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
