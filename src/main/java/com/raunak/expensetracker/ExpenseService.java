@@ -125,4 +125,29 @@ public class ExpenseService {
 
         return total;
     }
+
+    public String exportExpensesToCsv() {
+
+    List<Expense> expenses = expenseRepository.findAll();
+
+    StringBuilder csv = new StringBuilder();
+
+    csv.append("Date,Description,Amount,Category\n");
+
+    for (Expense expense : expenses) {
+
+        csv.append(
+                CsvUtil.toLine(
+                        expense.getDate(),
+                        expense.getDescription(),
+                        String.valueOf(expense.getAmount()),
+                        expense.getCategory()
+                )
+        );
+
+        csv.append("\n");
+    }
+
+    return csv.toString();
+}
 }

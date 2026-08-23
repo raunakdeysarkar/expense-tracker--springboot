@@ -521,3 +521,6 @@ function showAddExpense() {
 // ================= START APPLICATION =================
 
 loadExpenses();
+function exportExpenses() {
+    window.location.href = "/expenses/export";
+}

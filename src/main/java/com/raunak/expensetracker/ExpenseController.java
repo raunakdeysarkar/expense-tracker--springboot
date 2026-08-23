@@ -55,4 +55,22 @@ public class ExpenseController {
     public double getMonthlyTotal(@PathVariable String month) {
         return expenseService.getMonthlyTotal(month);
     }
+
+@GetMapping("/export")
+public org.springframework.http.ResponseEntity<String> exportExpenses() {
+
+    String csv = expenseService.exportExpensesToCsv();
+
+    return org.springframework.http.ResponseEntity.ok()
+            .header(
+                    "Content-Disposition",
+                    "attachment; filename=expenses.csv"
+            )
+            .header(
+                    "Content-Type",
+                    "text/csv"
+            )
+            .body(csv);
+}
+    
 }
