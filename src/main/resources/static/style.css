@@ -186,6 +186,11 @@ nav {
     border-bottom: 1px solid #292d2a;
 }
 
+.table-header > :last-child {
+    width: 100%;
+    text-align: right !important;
+}
+
 .expense-row {
     border-bottom: 1px solid #242825;
 }
@@ -297,6 +302,7 @@ nav {
         grid-template-columns: 1fr;
     }
 }
+
 /* Page Navigation */
 
 .hidden {
@@ -316,7 +322,6 @@ nav {
     color: #999999;
 }
 
-
 /* Delete Button */
 
 .delete-button {
@@ -334,7 +339,6 @@ nav {
     border-color: #35d04f;
     color: #35d04f;
 }
-
 
 /* Category / Month Cards */
 
