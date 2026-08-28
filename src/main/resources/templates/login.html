@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Expense Tracker</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="auth-container">
+
+    <div class="auth-card">
+
+        <div class="auth-brand">
+            💰 <span>Expense</span>Tracker
+        </div>
+
+        <div class="auth-heading">
+            <h1>Welcome back</h1>
+            <p>Sign in to continue managing your expenses.</p>
+        </div>
+
+        <form class="auth-form"
+              th:action="@{/login}"
+              method="post">
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Password"
+                required
+            >
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <p class="auth-error" th:if="${param.error}">
+            Invalid username or password.
+        </p>
+
+        <div class="auth-divider"></div>
+
+        <p class="auth-link">
+            Don't have an account?
+            <a href="/register">Create an account</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
