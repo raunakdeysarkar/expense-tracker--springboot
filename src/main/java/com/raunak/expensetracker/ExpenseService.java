@@ -10,12 +10,24 @@ import java.util.List;
 public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
+    private final UserRepository userRepository;
 
-    public ExpenseService(ExpenseRepository expenseRepository) {
-        this.expenseRepository = expenseRepository;
-    }
+ public ExpenseService(ExpenseRepository expenseRepository,
+                      UserRepository userRepository) {
+    this.expenseRepository = expenseRepository;
+    this.userRepository = userRepository;
+}
+    private User getUser(String username) {
 
-    public Expense addExpense(Expense expense) {
+    return userRepository.findByUsername(username)
+            .orElseThrow(() ->
+                    new ResponseStatusException(
+                            HttpStatus.NOT_FOUND,
+                            "User not found"
+                    ));
+}
+
+    public Expense addExpense(Expense expense, String username) {
 
         if (expense.getAmount() <= 0) {
             throw new ResponseStatusException(
@@ -37,17 +49,26 @@ public class ExpenseService {
                     "Invalid expense data"
             );
         }
+        User user = getUser(username);
+         expense.setUser(user);
 
         return expenseRepository.save(expense);
     }
 
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
+    public List<Expense> getAllExpenses(String username) {
+
+    User user = getUser(username);
+
+    return expenseRepository.findByUser(user);
     }
 
-    public Expense getExpenseById(Long id) {
+        public Expense getExpenseById(Long id, String username) {
 
-        Expense expense = expenseRepository.findById(id).orElse(null);
+        User user = getUser(username);
+
+        Expense expense = expenseRepository
+                .findByIdAndUser(id, user)
+                .orElse(null);
 
         if (expense == null) {
             throw new ResponseStatusException(
@@ -58,14 +79,34 @@ public class ExpenseService {
 
         return expense;
     }
+    public void deleteExpense(Long id, String username) {
 
-    public void deleteExpense(Long id) {
-        expenseRepository.deleteById(id);
+        User user = getUser(username);
+
+        Expense expense = expenseRepository
+                .findByIdAndUser(id, user)
+                .orElse(null);
+
+        if (expense == null) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "Expense not found"
+            );
+        }
+
+        expenseRepository.delete(expense);
     }
 
-    public Expense updateExpense(Long id, Expense updatedExpense) {
+    public Expense updateExpense(
+            Long id,
+            Expense updatedExpense,
+            String username) {
 
-        Expense expense = expenseRepository.findById(id).orElse(null);
+        User user = getUser(username);
+
+        Expense expense = expenseRepository
+                .findByIdAndUser(id, user)
+                .orElse(null);
 
         if (expense == null) {
             throw new ResponseStatusException(
@@ -81,10 +122,12 @@ public class ExpenseService {
 
         return expenseRepository.save(expense);
     }
+        public double getTotalExpenses(String username) {
 
-    public double getTotalExpenses() {
+        User user = getUser(username);
 
-        List<Expense> expenses = expenseRepository.findAll();
+        List<Expense> expenses =
+                expenseRepository.findByUser(user);
 
         double total = 0;
 
@@ -95,14 +138,23 @@ public class ExpenseService {
         return total;
     }
 
-    public List<Expense> getExpensesByCategory(String category) {
+        public List<Expense> getExpensesByCategory(
+            String category,
+            String username) {
 
-        List<Expense> expenses = expenseRepository.findAll();
-        List<Expense> result = new java.util.ArrayList<>();
+        User user = getUser(username);
+
+        List<Expense> expenses =
+                expenseRepository.findByUser(user);
+
+        List<Expense> result =
+                new java.util.ArrayList<>();
 
         for (Expense expense : expenses) {
+
             if (expense.getCategory() != null &&
-                    expense.getCategory().equalsIgnoreCase(category)) {
+                    expense.getCategory()
+                            .equalsIgnoreCase(category)) {
 
                 result.add(expense);
             }
@@ -111,14 +163,22 @@ public class ExpenseService {
         return result;
     }
 
-    public double getMonthlyTotal(String month) {
+        public double getMonthlyTotal(
+            String month,
+            String username) {
 
-        List<Expense> expenses = expenseRepository.findAll();
+        User user = getUser(username);
+
+        List<Expense> expenses =
+                expenseRepository.findByUser(user);
 
         double total = 0;
 
         for (Expense expense : expenses) {
-            if (expense.getDate().startsWith(month)) {
+
+            if (expense.getDate() != null &&
+                    expense.getDate().startsWith(month)) {
+
                 total += expense.getAmount();
             }
         }
@@ -126,9 +186,12 @@ public class ExpenseService {
         return total;
     }
 
-    public String exportExpensesToCsv() {
+    public String exportExpensesToCsv(String username) {
 
-    List<Expense> expenses = expenseRepository.findAll();
+    User user = getUser(username);
+
+    List<Expense> expenses =
+            expenseRepository.findByUser(user);
 
     StringBuilder csv = new StringBuilder();
 

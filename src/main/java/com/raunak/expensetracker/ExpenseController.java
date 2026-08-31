@@ -1,6 +1,7 @@
 package com.raunak.expensetracker;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -15,51 +16,97 @@ public class ExpenseController {
     }
 
     @PostMapping
-    public Expense addExpense(@RequestBody Expense expense) {
-        return expenseService.addExpense(expense);
-    }
+    public Expense addExpense(
+        @RequestBody Expense expense,
+        Authentication authentication) {
+
+    String username = authentication.getName();
+
+    return expenseService.addExpense(expense, username);
+    }   
 
     @GetMapping
-    public List<Expense> getAllExpenses() {
-        return expenseService.getAllExpenses();
-    }
+    public List<Expense> getAllExpenses(Authentication authentication) {
+
+    String username = authentication.getName();
+
+    return expenseService.getAllExpenses(username);
+}
 
     @GetMapping("/{id}")
-    public Expense getExpenseById(@PathVariable Long id) {
-        return expenseService.getExpenseById(id);
+    public Expense getExpenseById(
+            @PathVariable Long id,
+            Authentication authentication) {
+
+        String username = authentication.getName();
+
+        return expenseService.getExpenseById(id, username);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteExpense(@PathVariable Long id) {
-        expenseService.deleteExpense(id);
-    }
+    public void deleteExpense(
+            @PathVariable Long id,
+            Authentication authentication) {
 
+        String username = authentication.getName();
+
+    expenseService.deleteExpense(id, username);
+}
     @PutMapping("/{id}")
     public Expense updateExpense(
             @PathVariable Long id,
-            @RequestBody Expense updatedExpense) {
+            @RequestBody Expense updatedExpense,
+            Authentication authentication) {
 
-        return expenseService.updateExpense(id, updatedExpense);
+        String username = authentication.getName();
+
+        return expenseService.updateExpense(
+                id,
+                updatedExpense,
+                username
+        );
     }
 
-    @GetMapping("/summary")
-    public double getTotalExpenses() {
-        return expenseService.getTotalExpenses();
-}
+        @GetMapping("/summary")
+    public double getTotalExpenses(Authentication authentication) {
 
-    @GetMapping("/category/{category}")
-    public List<Expense> getExpensesByCategory(@PathVariable String category) {
-        return expenseService.getExpensesByCategory(category);
+        String username = authentication.getName();
+
+        return expenseService.getTotalExpenses(username);
+    }
+
+        @GetMapping("/category/{category}")
+    public List<Expense> getExpensesByCategory(
+            @PathVariable String category,
+            Authentication authentication) {
+
+        String username = authentication.getName();
+
+        return expenseService.getExpensesByCategory(
+                category,
+                username
+        );
     }
         @GetMapping("/month/{month}")
-    public double getMonthlyTotal(@PathVariable String month) {
-        return expenseService.getMonthlyTotal(month);
-    }
+public double getMonthlyTotal(
+        @PathVariable String month,
+        Authentication authentication) {
+
+    String username = authentication.getName();
+
+    return expenseService.getMonthlyTotal(
+            month,
+            username
+    );
+}
 
 @GetMapping("/export")
-public org.springframework.http.ResponseEntity<String> exportExpenses() {
+public org.springframework.http.ResponseEntity<String> exportExpenses(
+        Authentication authentication) {
 
-    String csv = expenseService.exportExpensesToCsv();
+    String username = authentication.getName();
+
+    String csv = expenseService.exportExpensesToCsv(username);
 
     return org.springframework.http.ResponseEntity.ok()
             .header(

@@ -370,13 +370,16 @@ async function addExpense() {
 
         });
 
+if (!response.ok) {
 
-    if (!response.ok) {
+    const errorText = await response.text();
 
-        alert("Invalid expense data.");
+    console.error("Server error:", response.status, errorText);
 
-        return;
-    }
+    alert(`Server error (${response.status}): ${errorText}`);
+
+    return;
+}
 
 
     document.getElementById("date").value = "";

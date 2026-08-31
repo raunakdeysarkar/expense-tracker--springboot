@@ -15,6 +15,10 @@ public class Expense {
     private double amount;
     private String category;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     public Expense() {
     }
 
@@ -45,6 +49,10 @@ public class Expense {
         return category;
     }
 
+    public User getUser() {
+        return user;
+    }
+
     public void setDate(String date) {
         this.date = date;
     }
@@ -59,5 +67,9 @@ public class Expense {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
